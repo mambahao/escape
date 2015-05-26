@@ -153,7 +153,9 @@ function init(keywords){
 function santize(str) {
   var keyList = find(str);
   _.forEach(keyList, function(key){
-    str = str.replace(key, '*');
+    var mask = '***********************************************';
+    mask = mask.length > key.length ? mask.substr(0, key.length) : mask;
+    str = str.replace(key, mask);
   })
   return str;
 }
