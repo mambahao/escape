@@ -34,26 +34,27 @@ function translation(str) {
         ch = simChn[index];
         chHex = simChn.charCodeAt(index).toString(16);
         chHex = _.parseInt(chHex, 16);
-      };
+      }
     }
     // console.log('after:');
     // console.log(chHex);
     c.push(String.fromCharCode(chHex));
-  };
+  }
   return c;
-};
+}
 
 function isSkip(firstChar) {
   if (firstChar < '0')
     return true;
-  if (firstChar > '9' && firstChar < 'A')
+  else if (firstChar > '9' && firstChar < 'A')
     return true;
-  if (firstChar > 'Z' && firstChar < 'a')
+  else if (firstChar > 'Z' && firstChar < 'a')
     return true;
-  if (firstChar > 'z' && firstChar < 128)
+  else if (firstChar > 'z' && firstChar < 128)
     return true;
-  return false;
-};
+  else
+    return false;
+}
 
 function find(src) {
   if(_.isNull(node)){
@@ -64,16 +65,13 @@ function find(src) {
 
   if (_.isEmpty(src)) {
     return result;
-  };
+  }
 
-  var text  = translation(src)
-    , start = 0;
+  var text  = translation(src);
+  var start = 0;
 
   while(start < text.length) {
-    var length = 0
-      , len = text.length -1
-      , firstChar = text[start+length]
-      , curNode = {};
+    var length = 0, len = text.length -1, firstChar = text[start+length], curNode = {};
 
     while(isSkip(firstChar) && (start + length ) < len){
       start++;
@@ -92,7 +90,7 @@ function find(src) {
 
       if ((start + length) >= text.length) {
         break;
-      };
+      }
 
       firstChar = text[start + length];
 
@@ -105,7 +103,7 @@ function find(src) {
     if (curNode.isEnd) {
       result.push(src.substr(start, length));
       start += length - 1;
-    };
+    }
 
     start++;
   }
@@ -139,24 +137,25 @@ function init(keywords){
 
       if (typeof curNode[chNext] === 'undefined') {
         curNode[chNext] = {};
-      };
+      }
 
       if (i === chs.length-1) {
         curNode[chNext].isEnd = true;
-      };
+      }
 
       curNode = curNode[chNext];
-    };
-  })
+    }
+  });
 }
 
-function santize(str) {
+function santize(str, mask, fixed) {
   var keyList = find(str);
-  _.forEach(keyList, function(key){
-    var mask = '***********************************************';
-    mask = mask.length > key.length ? mask.substr(0, key.length) : mask;
+
+  if(!mask) mask = '***********************************************';
+  _.forEach(keyList, function (key) {
+    if(!fixed) mask = mask.length > key.length ? mask.substr(0, key.length) : mask;
     str = str.replace(key, mask);
-  })
+  });
   return str;
 }
 
