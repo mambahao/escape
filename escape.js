@@ -12,23 +12,20 @@ var simChn = '产皑蔼碍爱翱袄奥坝罢摆败颁办绊帮绑镑谤剥饱宝
 
 function translation(str) {
   var c = [];
-  for (var i = 0; i < str.length; i++) {
+  for(var i = 0; i < str.length; i++) {
     var ch = str[i];
     var chHex = str.charCodeAt(i).toString(16);
     chHex = _.parseInt(chHex, 16);
-    // console.log(typeof chHex);
-    // console.log('before:');
-    // console.log(chHex);
-    /*全角=>半角*/
-    if (chHex > 0xFF00 && chHex < 0xFF5F)
+    /* 全角 => 半角 */
+    if(chHex > 0xFF00 && chHex < 0xFF5F)
       chHex = (chHex - 0xFEE0);
 
-    /*大写=>小写*/
-    if (chHex > 0x40 && chHex < 0x5b)
+    /* 大写 => 小写 */
+    if(chHex > 0x40 && chHex < 0x5b)
       chHex = (chHex + 0x20);
 
-    /*繁体=>简体*/
-    if (chHex > 0x4E00 && chHex < 0x9FFF) {
+    /* 繁体 => 简体 */
+    if(chHex > 0x4E00 && chHex < 0x9FFF) {
       var index = traChn.indexOf(ch);
       if (index > -1) {
         ch = simChn[index];
@@ -36,36 +33,26 @@ function translation(str) {
         chHex = _.parseInt(chHex, 16);
       }
     }
-    // console.log('after:');
-    // console.log(chHex);
     c.push(String.fromCharCode(chHex));
   }
+
   return c;
 }
 
 function isSkip(firstChar) {
-  if (firstChar < '0')
-    return true;
-  else if (firstChar > '9' && firstChar < 'A')
-    return true;
-  else if (firstChar > 'Z' && firstChar < 'a')
-    return true;
-  else if (firstChar > 'z' && firstChar < 128)
-    return true;
-  else
-    return false;
+  if (firstChar < '0') return true;
+  else if (firstChar > '9' && firstChar < 'A') return true;
+  else if (firstChar > 'Z' && firstChar < 'a') return true;
+  else if (firstChar > 'z' && firstChar < 128) return true;
+  else return false;
 }
 
 function find(src) {
-  if(_.isNull(node)){
-    throw '未初始化';
-  }
+  if(_.isNull(node)) throw '未初始化';
 
   var result = [];
 
-  if (_.isEmpty(src)) {
-    return result;
-  }
+  if (_.isEmpty(src)) return result;
 
   var text  = translation(src);
   var start = 0;
@@ -88,9 +75,7 @@ function find(src) {
       curNode = curNode[firstChar];
       length++;
 
-      if ((start + length) >= text.length) {
-        break;
-      }
+      if((start + length) >= text.length) break;
 
       firstChar = text[start + length];
 
@@ -100,24 +85,21 @@ function find(src) {
       }
     }
 
-    if (curNode.isEnd) {
+    if(curNode.isEnd) {
       result.push(src.substr(start, length));
       start += length - 1;
     }
 
     start++;
   }
+
   return result;
 }
 
 function init(keywords){
-  if (!_.isArray(keywords)) {
-    throw '关键词列表不是数组';
-  }
+  if(!_.isArray(keywords)) throw '关键词列表不是数组';
 
-  if (node !== null) {
-    return;
-  }
+  if(node !== null) return;
 
   node = {};
   node.isEnd = false;
@@ -126,22 +108,16 @@ function init(keywords){
     var ch = chs[0];
     var chNext = '';
 
-    if(typeof node[ch] === 'undefined'){
-      node[ch] = {};
-    }
+    if(typeof node[ch] === 'undefined') node[ch] = {};
 
     var curNode = node[ch];
     for (var i = 1; i < chs.length; i++) {
       curNode.isEnd = false;
       chNext = chs[i];
 
-      if (typeof curNode[chNext] === 'undefined') {
-        curNode[chNext] = {};
-      }
+      if(typeof curNode[chNext] === 'undefined') curNode[chNext] = {};
 
-      if (i === chs.length-1) {
-        curNode[chNext].isEnd = true;
-      }
+      if(i === chs.length-1) curNode[chNext].isEnd = true;
 
       curNode = curNode[chNext];
     }
@@ -156,6 +132,7 @@ function santize(str, mask, fixed) {
     if(!fixed) mask = mask.length > key.length ? mask.substr(0, key.length) : mask;
     str = str.replace(key, mask);
   });
+
   return str;
 }
 
