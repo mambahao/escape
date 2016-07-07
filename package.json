@@ -1,6 +1,6 @@
 {
   "name": "chn-escape",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "description": "关键词过滤工具",
   "main": "escape.js",
   "scripts": {
@@ -23,7 +23,7 @@
   },
   "homepage": "https://github.com/mambahao/escape",
   "dependencies": {
-    "lodash": "^4.11.2"
+    "lodash": "*"
   },
   "devDependencies": {
     "grunt": "*",
